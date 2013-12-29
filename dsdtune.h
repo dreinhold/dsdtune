@@ -28,7 +28,7 @@
 
 #define MAX_IN_FILE_LEN 200
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 
 typedef struct {
   char name[3];

@@ -143,9 +143,11 @@ int main(int argc, char *argv[]) {
   i=0;
   printf("+------ RESULTS -----+\n");
   printf("Switches you want to use :\n");
+  printf("  ");
   while(params[i].name[0] != ' ') {
-    printf("  -%s%u\n",params[i].name, params[i].best_setting);
+    printf(" -%s%u",params[i].name, params[i].best_setting);
     i++;
   }
+  printf("\n");
   return 0;
 }
