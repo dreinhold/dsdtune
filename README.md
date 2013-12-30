@@ -32,7 +32,8 @@ discriminator audio. After about one minute press r agian to stop.
  * Run `dsdtune -i DSDPlus-Raw-Input_2013-12-28@140307.wav` you should also pass
 the decoder options `-fd, -fn -fN, -fr...`
 
-`Usage: 
+```
+Usage: 
  dsdtune [options] 
  dsdtune -i <in_file>	Use default dsd decode
 
@@ -49,7 +50,8 @@ the decoder options `-fd, -fn -fN, -fr...`
  -x Name of dsd executable. (dsd.exe default)
  -b <file> Create batch file with results
  -o "<dsd options>" Options to pass to dsd from
-     the batch file. The double quotes are required`
+     the batch file. The double quotes are required
+```
 
 
 
