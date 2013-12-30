@@ -42,7 +42,10 @@ void usage(void) {
   printf(" -fr Decode only DMR/MOTOTRBO\n");
   printf(" -fx Decode only X2-TDMA\n");
   printf("\n");
-  printf(" -x Name of dsd execuitable. (dsd default)\n");
+  printf(" -x Name of dsd executable. (dsd.exe default)\n");
+  printf(" -b <file> Create batch file with results\n");
+  printf(" -o \"<dsd options>\" Options to pass to dsd from\n");
+  printf("     the batch file. The double quotes are required\n");
   /* not setup yet
   printf(" -v <num> Verbosity 1-5 (5 is MAX)\n"); */
 }
@@ -65,14 +68,19 @@ int main(int argc, char *argv[]) {
                            { "  ",  0,   0, 0, 0 } }; /* GCC warns if this is 0 */
   options opts;
   /* while ((c = getopt (argc, argv, "hf:v:i:")) != -1) { */
-  strncpy(opts.exe_name, "dsd", 4);
+  strncpy(opts.exe_name, "dsd.exe", 8);
   opts.decode_option_set = 0;
   opts.infile_set = 0;
-  while ((c = getopt (argc, argv, "hf:i:x:")) != -1) {
+  opts.write_batch = 0;
+  opts.batch_options[0] = '\0';
+  while ((c = getopt (argc, argv, "hf:i:x:b:o:")) != -1) {
     opterr = 0;
     switch (c) {
        case 'h':    usage();
                     exit(0);
+       case 'b':    strncpy(opts.batch_name, optarg, 99);
+                    opts.write_batch = 1;
+                    break;
        /* not setup yet
        case 'v':    sscanf (optarg, "%d", &opts.verbose);
                     break; */
@@ -83,6 +91,8 @@ int main(int argc, char *argv[]) {
        case 'f':    opts.decode_option[0] = optarg[0];
                     opts.decode_option[1] = '\0';
                     opts.decode_option_set = 1;
+                    break;
+       case 'o':    strncpy(opts.batch_options, optarg, 99);
                     break;
        case 'x':    strncpy(opts.exe_name, optarg, 99);
                     break;
@@ -141,7 +151,7 @@ int main(int argc, char *argv[]) {
   }
   /* Resutls */
   i=0;
-  printf("+------ RESULTS -----+\n");
+  printf("\n+------ RESULTS -----+\n");
   printf("Switches you want to use :\n");
   printf("  ");
   while(params[i].name[0] != ' ') {
@@ -149,5 +159,7 @@ int main(int argc, char *argv[]) {
     i++;
   }
   printf("\n");
+  if(opts.write_batch) 
+    write_batch(params, &opts);
   return 0;
 }

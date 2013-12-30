@@ -22,3 +22,4 @@
  * dsdtune is a wrapper around the dsdplus to find the best values to run under
  */
 unsigned int decode_rate(char *);
+void write_batch(dsd_params *, options *);

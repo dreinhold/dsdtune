@@ -25,10 +25,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define MAX_IN_FILE_LEN 200
 
-#define VERSION "0.0.2"
+#define VERSION "0.0.3"
 
 typedef struct {
   char name[3];
@@ -45,5 +46,8 @@ typedef struct {
   int decode_option_set;
   char decode_option[2];
   char exe_name[100];
+  int write_batch;
+  char batch_name[100];
+  char batch_options[100];
 } options;
-                  
+

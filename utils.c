@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include "dsdtune.h"
 #include "utils.h"
+#include <time.h>
 
 unsigned int decode_rate(char *line) {
   /* Assume line is formated as :
@@ -46,3 +47,42 @@ unsigned int decode_rate(char *line) {
   }
   return atol(tmp_rate);
 }
+
+void get_time_stamp(char *timestamp) {
+  time_t sec;
+  sec =  time(NULL);
+  sprintf(timestamp, "%s", ctime(&sec));
+}
+
+void write_batch(dsd_params *params, options *opts) {
+  /* Write a batch file with the sugested settings */
+  FILE *b_fh;
+  char timestamp[30];
+  int i = 0;
+  
+  b_fh = fopen(opts->batch_name, "wt");
+  if(b_fh == NULL) {
+    fprintf(stderr, "ERROR : Could not create batch file %s (%d)\n", opts->batch_name, errno);
+    return;
+  }
+  get_time_stamp(timestamp);
+  fprintf(b_fh, "@echo off\n");
+  fprintf(b_fh, "REM : batch file created with dsdtune utility on %s\n", timestamp);
+  fprintf(b_fh, "\n");
+  if(opts->decode_option_set) 
+    if(opts->batch_options != NULL)
+      fprintf(b_fh, "%s %s -f%s", opts->exe_name, opts->batch_options, opts->decode_option);
+    else
+      fprintf(b_fh, "%s -f%s", opts->exe_name, opts->decode_option);
+  else
+    fprintf(b_fh, "%s", opts->exe_name);
+
+  while(params[i].name[0] != ' ') {
+    fprintf(b_fh, " -%s%u",params[i].name, params[i].best_setting);
+    i++;
+  }
+  fprintf(b_fh, "\n");
+  fclose(b_fh);
+  printf("\nCreated batch file %s to run dsd\n", opts->batch_name);
+}
+

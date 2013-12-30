@@ -32,5 +32,26 @@ discriminator audio. After about one minute press r agian to stop.
  * Run `dsdtune -i DSDPlus-Raw-Input_2013-12-28@140307.wav` you should also pass
 the decoder options `-fd, -fn -fN, -fr...`
 
-##Developers
+`Usage: 
+ dsdtune [options] 
+ dsdtune -i <in_file>	Use default dsd decode
+
+ -f<x> dsd decode option
+ -fa Auto-detect frame type (default)
+ -f1 Decode only P25 Phase 1
+ -fd Decode only D-STAR
+ -fi Decode only NXDN48* (6.25 kHz) / IDAS*
+ -fn Decode only NXDN96 (12.5 kHz)
+ -fp Decode only ProVoice*
+ -fr Decode only DMR/MOTOTRBO
+ -fx Decode only X2-TDMA
+
+ -x Name of dsd executable. (dsd.exe default)
+ -b <file> Create batch file with results
+ -o "<dsd options>" Options to pass to dsd from
+     the batch file. The double quotes are required`
+
+
+
+##Developer Info
  * This was complied with mingwin cross compiler using `i686-pc-mingw32-gcc -Wall -o dsdtune.exe utils.c dsdtune.c` (gcc version 4.8.2 (GCC))
