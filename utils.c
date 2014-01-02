@@ -26,6 +26,11 @@
 #include "utils.h"
 #include <time.h>
 
+int fileexists(char *filename) {
+  /* check if a file exists */
+  return access( filename, 0 );
+}
+
 unsigned int decode_rate(char *line) {
   /* Assume line is formated as :
    * decoding score = 42,072

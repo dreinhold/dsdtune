@@ -42,7 +42,8 @@ void usage(void) {
   printf(" -fr Decode only DMR/MOTOTRBO\n");
   printf(" -fx Decode only X2-TDMA\n");
   printf("\n");
-  printf(" -x Name of dsd executable. (dsd.exe default)\n");
+  printf(" -x Name of dsd executable. (dsdplus.exe default)\n");
+  printf("    If dsdplus.exe is not found dsd.exe will be tried\n");
   printf(" -b <file> Create batch file with results\n");
   printf(" -o \"<dsd options>\" Options to pass to dsd from\n");
   printf("     the batch file. The double quotes are required\n");
@@ -68,8 +69,12 @@ int main(int argc, char *argv[]) {
                            { "dv",  1,  30, 0, 0 },
                            { "  ",  0,   0, 0, 0 } }; /* GCC warns if this is 0 */
   options opts;
-  /* while ((c = getopt (argc, argv, "hf:v:i:")) != -1) { */
-  strncpy(opts.exe_name, "dsd.exe", 8);
+  /* Check if dsdplus.exe exists if so us that first */
+  if(fileexists("dsdplus.exe") == 0) {
+    strncpy(opts.exe_name, "dsdplus.exe", 12);
+  } else {
+    strncpy(opts.exe_name, "dsd.exe", 8);
+  }
   opts.decode_option_set = 0;
   opts.infile_set = 0;
   opts.write_batch = 0;
