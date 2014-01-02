@@ -46,6 +46,7 @@ void usage(void) {
   printf(" -b <file> Create batch file with results\n");
   printf(" -o \"<dsd options>\" Options to pass to dsd from\n");
   printf("     the batch file. The double quotes are required\n");
+  printf(" -l <file> Log file name (dsdtune.log default)\n");
   /* not setup yet
   printf(" -v <num> Verbosity 1-5 (5 is MAX)\n"); */
 }
@@ -73,6 +74,7 @@ int main(int argc, char *argv[]) {
   opts.infile_set = 0;
   opts.write_batch = 0;
   opts.batch_options[0] = '\0';
+  strcpy(opts.logfile, "dsdtune.log");
   while ((c = getopt (argc, argv, "hf:i:x:b:o:")) != -1) {
     opterr = 0;
     switch (c) {
@@ -91,6 +93,8 @@ int main(int argc, char *argv[]) {
        case 'f':    opts.decode_option[0] = optarg[0];
                     opts.decode_option[1] = '\0';
                     opts.decode_option_set = 1;
+                    break;
+       case 'l':    strncpy(opts.logfile, optarg, 99);
                     break;
        case 'o':    strncpy(opts.batch_options, optarg, 99);
                     break;
@@ -159,6 +163,7 @@ int main(int argc, char *argv[]) {
     i++;
   }
   printf("\n");
+  write_log(params, &opts);
   if(opts.write_batch) 
     write_batch(params, &opts);
   return 0;

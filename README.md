@@ -51,6 +51,7 @@ Usage:
  -b <file> Create batch file with results
  -o "<dsd options>" Options to pass to dsd from
      the batch file. The double quotes are required
+ -l <file> Log file name (dsdtune.log default)
 ```
 
 

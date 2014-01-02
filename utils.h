@@ -23,3 +23,4 @@
  */
 unsigned int decode_rate(char *);
 void write_batch(dsd_params *, options *);
+void write_log(dsd_params *, options *);

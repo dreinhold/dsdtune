@@ -52,14 +52,41 @@ void get_time_stamp(char *timestamp) {
   time_t sec;
   sec =  time(NULL);
   sprintf(timestamp, "%s", ctime(&sec));
+  *(timestamp + strlen(timestamp) - 1) = '\0';
 }
 
+void write_log(dsd_params *params, options *opts) {
+  FILE *log_fh;
+  char timestamp[30] = "";
+  int i = 0;
+  char logline[100] = "";
+  
+  log_fh = fopen(opts->logfile, "a");
+  if(log_fh == NULL)
+    return;
+  get_time_stamp(timestamp);
+  while(params[i].name[0] != ' ') {
+    char tmp[10] = "";
+    strcat(logline, " -");
+    strcat(logline, params[i].name);
+    sprintf(tmp, "%d", params[i].best_setting);
+    strcat(logline, tmp);
+    i++;
+  }
+  if(opts->decode_option_set) {
+    fprintf(log_fh, "%s : Best Decode on file %s was %d with options -f%s %s\n", timestamp, opts->infile, params[i-1].best_results, opts->decode_option, logline);
+  } else {
+    fprintf(log_fh, "%s : Best Decode on file %s was %d with options%s\n", timestamp, opts->infile, params[i-1].best_results, logline);
+  }
+  fclose(log_fh);
+}
+  
 void write_batch(dsd_params *params, options *opts) {
   /* Write a batch file with the sugested settings */
   FILE *b_fh;
-  char timestamp[30];
+  char timestamp[30] = "";
   int i = 0;
-  
+
   b_fh = fopen(opts->batch_name, "wt");
   if(b_fh == NULL) {
     fprintf(stderr, "ERROR : Could not create batch file %s (%d)\n", opts->batch_name, errno);
@@ -69,13 +96,14 @@ void write_batch(dsd_params *params, options *opts) {
   fprintf(b_fh, "@echo off\n");
   fprintf(b_fh, "REM : batch file created with dsdtune utility on %s\n", timestamp);
   fprintf(b_fh, "\n");
-  if(opts->decode_option_set) 
+  if(opts->decode_option_set) {
     if(opts->batch_options != NULL)
       fprintf(b_fh, "%s %s -f%s", opts->exe_name, opts->batch_options, opts->decode_option);
     else
       fprintf(b_fh, "%s -f%s", opts->exe_name, opts->decode_option);
-  else
+  } else {
     fprintf(b_fh, "%s", opts->exe_name);
+  }
 
   while(params[i].name[0] != ' ') {
     fprintf(b_fh, " -%s%u",params[i].name, params[i].best_setting);
