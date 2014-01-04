@@ -65,15 +65,7 @@ void write_log(dsd_params *params, options *opts) {
   char timestamp[30] = "";
   int i = 0;
   char logline[100] = "";
-  char invert_x2_tdma_str[] = "-xx";
-  char psk_mod_str[] = "-mp";
 
-  if(! opts->invert_x2_tdma ) { 
-    invert_x2_tdma_str[0] = '\0';
-  }
-  if(! opts->psk_mod ) {
-    psk_mod_str[0] = '\0';
-  }
   log_fh = fopen(opts->logfile, "a");
   if(log_fh == NULL)
     return;
@@ -87,9 +79,9 @@ void write_log(dsd_params *params, options *opts) {
     i++;
   }
   if(opts->decode_option_set) {
-    fprintf(log_fh, "%s : Best Decode on file %s was %d with options -f%s %s %s %s\n", timestamp, opts->infile, params[i-1].best_results, opts->decode_option, invert_x2_tdma_str, psk_mod_str, logline);
+    fprintf(log_fh, "%s : Best Decode on file %s was %d with options -f%s %s %s %s\n", timestamp, opts->infile, params[i-1].best_results, opts->decode_option, opts->invert_x2_tdma_str, opts->psk_mod_str, logline);
   } else {
-    fprintf(log_fh, "%s : Best Decode on file %s was %d with options %s %s %s\n", timestamp, opts->infile, params[i-1].best_results, invert_x2_tdma_str, psk_mod_str, logline);
+    fprintf(log_fh, "%s : Best Decode on file %s was %d with options %s %s %s\n", timestamp, opts->infile, params[i-1].best_results, opts->invert_x2_tdma_str, opts->psk_mod_str, logline);
   }
   fclose(log_fh);
 }
@@ -99,15 +91,6 @@ void write_batch(dsd_params *params, options *opts) {
   FILE *b_fh;
   char timestamp[30] = "";
   int i = 0;
-  char invert_x2_tdma_str[] = "-xx";
-  char psk_mod_str[] = "-mp";
-
-  if(! opts->invert_x2_tdma ) {
-    invert_x2_tdma_str[0] = '\0';
-  }
-  if(! opts->psk_mod ) {
-    psk_mod_str[0] = '\0';
-  }
 
   b_fh = fopen(opts->batch_name, "wt");
   if(b_fh == NULL) {
@@ -120,11 +103,11 @@ void write_batch(dsd_params *params, options *opts) {
   fprintf(b_fh, "\n");
   if(opts->decode_option_set) {
     if(opts->batch_options != NULL)
-      fprintf(b_fh, "%s %s -f%s %s %s", opts->exe_name, opts->batch_options, opts->decode_option, invert_x2_tdma_str, psk_mod_str);
+      fprintf(b_fh, "%s %s -f%s %s %s", opts->exe_name, opts->batch_options, opts->decode_option, opts->invert_x2_tdma_str, opts->psk_mod_str);
     else
-      fprintf(b_fh, "%s -f%s %s %s", opts->exe_name, opts->decode_option, invert_x2_tdma_str, psk_mod_str);
+      fprintf(b_fh, "%s -f%s %s %s", opts->exe_name, opts->decode_option, opts->invert_x2_tdma_str, opts->psk_mod_str);
   } else {
-    fprintf(b_fh, "%s %s %s", opts->exe_name, invert_x2_tdma_str, psk_mod_str);
+    fprintf(b_fh, "%s %s %s", opts->exe_name, opts->invert_x2_tdma_str, opts->psk_mod_str);
   }
 
   while(params[i].name[0] != ' ') {

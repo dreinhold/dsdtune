@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
   opts.infile_set = 0;
   opts.write_batch = 0;
   opts.batch_options[0] = '\0';
-  opts.invert_x2_tdma = 0;
-  opts.psk_mod = 0;
+  opts.invert_x2_tdma_str[0] = '\0';
+  opts.psk_mod_str[0] = '\0';
   strcpy(opts.logfile, "dsdtune.log");
   while ((c = getopt (argc, argv, "hf:i:x:b:o:m:")) != -1) {
     opterr = 0;
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
        case 'l':    strncpy(opts.logfile, optarg, 99);
                     break;
        case 'm':    if(*optarg == 'p' && *(optarg+1) == '\0') {
-                      opts.psk_mod = 1;
+                      strncpy(opts.psk_mod_str, "-mp", 4);
                     } else {
                       usage();
                       exit(1);
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
                     break;
        case 'x':    /* check for -xx first */
                     if(*optarg == 'x' && *(optarg+1) == '\0') {
-                      opts.invert_x2_tdma = 1;
+                      strncpy(opts.invert_x2_tdma_str, "-xx", 4);
                     } else {
                       strncpy(opts.exe_name, optarg, 99);
                     }
@@ -130,12 +130,11 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   if(opts.decode_option_set)
-    sprintf(base_command, "%s < %s -o0 -O NUL -f%s", opts.exe_name, opts.infile, opts.decode_option);
+    sprintf(base_command, "%s < %s -o0 -O NUL -f%s ", opts.exe_name, opts.infile, opts.decode_option);
   else
-    sprintf(base_command, "%s < %s -o0 -O NUL", opts.exe_name, opts.infile);
-  if(opts.invert_x2_tdma) {
-    strcat(base_command, " -xx");
-  }
+    sprintf(base_command, "%s < %s -o0 -O NUL ", opts.exe_name, opts.infile);
+  strcat(base_command, opts.invert_x2_tdma_str);
+  strcat(base_command, opts.psk_mod_str);
   decode_str_len = strlen(decode_str);
 
   while(params[i].name[0] != ' ') {

@@ -50,7 +50,7 @@ typedef struct {
   char batch_name[100];
   char batch_options[100];
   char logfile[100];
-  int invert_x2_tdma;
-  int psk_mod;
+  char invert_x2_tdma_str[4];
+  char psk_mod_str[4];
 } options;
 
