@@ -41,6 +41,7 @@ void usage(void) {
   printf(" -fp Decode only ProVoice*\n");
   printf(" -fr Decode only DMR/MOTOTRBO\n");
   printf(" -fx Decode only X2-TDMA\n");
+  printf(" -xx Expect inverted X2-TDMA signal\n");
   printf("\n");
   printf(" -x Name of dsd executable. (dsdplus.exe default)\n");
   printf("    If dsdplus.exe is not found dsd.exe will be tried\n");
@@ -79,6 +80,7 @@ int main(int argc, char *argv[]) {
   opts.infile_set = 0;
   opts.write_batch = 0;
   opts.batch_options[0] = '\0';
+  opts.invert_x2_tdma = 0;
   strcpy(opts.logfile, "dsdtune.log");
   while ((c = getopt (argc, argv, "hf:i:x:b:o:")) != -1) {
     opterr = 0;
@@ -103,7 +105,12 @@ int main(int argc, char *argv[]) {
                     break;
        case 'o':    strncpy(opts.batch_options, optarg, 99);
                     break;
-       case 'x':    strncpy(opts.exe_name, optarg, 99);
+       case 'x':    /* check for -xx first */
+                    if(*optarg == 'x' && *(optarg+1) == '\0') {
+                      opts.invert_x2_tdma = 1;
+                    } else {
+                      strncpy(opts.exe_name, optarg, 99);
+                    }
                     break;
        default:     usage();
                     exit(1);
@@ -118,6 +125,9 @@ int main(int argc, char *argv[]) {
     sprintf(base_command, "%s < %s -o0 -O NUL -f%s", opts.exe_name, opts.infile, opts.decode_option);
   else
     sprintf(base_command, "%s < %s -o0 -O NUL", opts.exe_name, opts.infile);
+  if(opts.invert_x2_tdma) {
+    strcat(base_command, " -xx");
+  }
   decode_str_len = strlen(decode_str);
 
   while(params[i].name[0] != ' ') {

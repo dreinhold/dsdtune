@@ -47,6 +47,8 @@ Usage:
  -fr Decode only DMR/MOTOTRBO
  -fx Decode only X2-TDMA
 
+ -xx Expect inverted X2-TDMA signal
+
  -x Name of dsd executable. (dsd.exe default)
  -b <file> Create batch file with results
  -o "<dsd options>" Options to pass to dsd from
