@@ -81,8 +81,9 @@ int main(int argc, char *argv[]) {
   opts.write_batch = 0;
   opts.batch_options[0] = '\0';
   opts.invert_x2_tdma = 0;
+  opts.psk_mod = 0;
   strcpy(opts.logfile, "dsdtune.log");
-  while ((c = getopt (argc, argv, "hf:i:x:b:o:")) != -1) {
+  while ((c = getopt (argc, argv, "hf:i:x:b:o:m:")) != -1) {
     opterr = 0;
     switch (c) {
        case 'h':    usage();
@@ -102,6 +103,13 @@ int main(int argc, char *argv[]) {
                     opts.decode_option_set = 1;
                     break;
        case 'l':    strncpy(opts.logfile, optarg, 99);
+                    break;
+       case 'm':    if(*optarg == 'p' && *(optarg+1) == '\0') {
+                      opts.psk_mod = 1;
+                    } else {
+                      usage();
+                      exit(1);
+                    }
                     break;
        case 'o':    strncpy(opts.batch_options, optarg, 99);
                     break;

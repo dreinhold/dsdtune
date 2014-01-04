@@ -48,6 +48,7 @@ Usage:
  -fx Decode only X2-TDMA
 
  -xx Expect inverted X2-TDMA signal
+ -mp Optimize for PSK modulation
 
  -x Name of dsd executable. (dsd.exe default)
  -b <file> Create batch file with results
