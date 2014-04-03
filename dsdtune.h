@@ -29,7 +29,7 @@
 
 #define MAX_IN_FILE_LEN 200
 
-#define VERSION "0.0.4b"
+#define VERSION "0.0.4"
 
 typedef struct {
   char name[3];
@@ -37,6 +37,7 @@ typedef struct {
   int  max;
   int  best_setting;
   unsigned int  best_results;
+  int  skip; /* skip if skip_params is set */
 } dsd_params;
 
 typedef struct {
@@ -52,5 +53,6 @@ typedef struct {
   char logfile[100];
   char invert_x2_tdma_str[4];
   char psk_mod_str[4];
+  int skip_params; /* Skip checking -ds/dd/dv options when set */
 } options;
 

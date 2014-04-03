@@ -63,12 +63,12 @@ int main(int argc, char *argv[]) {
   extern int optind, opterr, optopt;
   int decode_str_len;
   char base_command[255];
-  dsd_params params[] = {  { "dr",  1,   5, 0, 0 }, 
-                           { "dh",  1,   8, 0, 0 },
-                           { "ds", 50,  80, 0, 0 },
-                           { "dd",  1, 100, 0, 0 },
-                           { "dv",  1,  30, 0, 0 },
-                           { "  ",  0,   0, 0, 0 } }; /* GCC warns if this is 0 */
+  dsd_params params[] = {  { "dr",  1,   5, 0, 0, 0 }, 
+                           { "dh",  1,   8, 0, 0, 0 },
+                           { "ds", 50,  80, 0, 0, 1 },
+                           { "dd",  1, 100, 0, 0, 1 },
+                           { "dv",  1,  30, 0, 0, 1 },
+                           { "  ",  0,   0, 0, 0, 0 } }; /* GCC warns if this is 0 */
   options opts;
   /* Check if dsdplus.exe exists if so us that first */
   if(fileexists("dsdplus.exe") == 0) {
@@ -82,6 +82,7 @@ int main(int argc, char *argv[]) {
   opts.batch_options[0] = '\0';
   opts.invert_x2_tdma_str[0] = '\0';
   opts.psk_mod_str[0] = '\0';
+  opts.skip_params = 0;
   strcpy(opts.logfile, "dsdtune.log");
   while ((c = getopt (argc, argv, "hf:i:x:b:o:m:")) != -1) {
     opterr = 0;
@@ -101,6 +102,8 @@ int main(int argc, char *argv[]) {
        case 'f':    opts.decode_option[0] = optarg[0];
                     opts.decode_option[1] = '\0';
                     opts.decode_option_set = 1;
+                    if(optarg[0] == 'd' || optarg[0] == 'p')
+                      opts.skip_params = 1;
                     break;
        case 'l':    strncpy(opts.logfile, optarg, 99);
                     break;
@@ -140,6 +143,10 @@ int main(int argc, char *argv[]) {
   while(params[i].name[0] != ' ') {
     int j = params[i].min;
     char tmp_command[255];
+    if(opts.skip_params && params[i].skip) {
+      i++;
+      continue;
+    }
     printf("Checking option -%s\n", params[i].name);
     printf("Running %s -%sXXX\n", base_command, params[i].name);
     while(j <= params[i].max) {
@@ -181,6 +188,10 @@ int main(int argc, char *argv[]) {
   printf("Switches you want to use :\n");
   printf("  ");
   while(params[i].name[0] != ' ') {
+    if(opts.skip_params && params[i].skip) {
+      i++;
+      continue;
+    }
     printf(" -%s%u",params[i].name, params[i].best_setting);
     i++;
   }
