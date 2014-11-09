@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
   int i = 0;
   FILE *fp;
   char buffer[1024];
-  char decode_str[] = "decoding score = ";
+  char decode_str[] = " decoding score = ";
   int c;
   extern char *optarg;
   extern int optind, opterr, optopt;
@@ -83,6 +83,8 @@ int main(int argc, char *argv[]) {
   opts.invert_x2_tdma_str[0] = '\0';
   opts.psk_mod_str[0] = '\0';
   opts.skip_params = 0;
+  opts.infile_param[0] = '?'; /* dsdplus version > 1.5 */
+  opts.infile_param[1] = '\0';
   strcpy(opts.logfile, "dsdtune.log");
   while ((c = getopt (argc, argv, "hf:i:x:b:o:m:")) != -1) {
     opterr = 0;
@@ -133,9 +135,9 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   if(opts.decode_option_set)
-    sprintf(base_command, "%s < %s -o0 -O NUL -f%s ", opts.exe_name, opts.infile, opts.decode_option);
+    sprintf(base_command, "%s -o0 -O NUL -f%s", opts.exe_name, opts.decode_option);
   else
-    sprintf(base_command, "%s < %s -o0 -O NUL ", opts.exe_name, opts.infile);
+    sprintf(base_command, "%s -o0 -O NUL", opts.exe_name);
   strcat(base_command, opts.invert_x2_tdma_str);
   strcat(base_command, opts.psk_mod_str);
   decode_str_len = strlen(decode_str);
@@ -148,22 +150,22 @@ int main(int argc, char *argv[]) {
       continue;
     }
     printf("Checking option -%s\n", params[i].name);
-    printf("Running %s -%sXXX\n", base_command, params[i].name);
+    printf("Running %s -%sXXX %s %s\n", base_command, params[i].name, opts.infile_param, opts.infile);
     while(j <= params[i].max) {
         char command[255];
         int found = 0;
-        sprintf(command, "%s -%s%d 2>&1", base_command, params[i].name, j);
+        sprintf(command, "%s -%s%d %s %s 2>&1", base_command, params[i].name, j, opts.infile_param, opts.infile);
         if( (fp = popen( command, "r" )) == NULL ) {
            perror("Failed to open ");
            fprintf(stderr, "failed to open dsd\n");
            exit(5);
         }
         while(fgets(buffer, 1024, fp))  {
-           if( strncmp(buffer, decode_str, decode_str_len-1) == 0 ) {
+           if( strncmp(buffer, decode_str, decode_str_len-1) == 0) {
              unsigned int rate;
              found = 1;
              rate = decode_rate(buffer);
-             if(rate >= params[i].best_results) {
+             if(rate > params[i].best_results) {
                params[i].best_results = rate;
                params[i].best_setting = j;
              }

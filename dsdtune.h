@@ -29,7 +29,7 @@
 
 #define MAX_IN_FILE_LEN 200
 
-#define VERSION "0.0.4"
+#define VERSION "0.1.0"
 
 typedef struct {
   char name[3];
@@ -54,5 +54,6 @@ typedef struct {
   char invert_x2_tdma_str[4];
   char psk_mod_str[4];
   int skip_params; /* Skip checking -ds/dd/dv options when set */
+  char infile_param[2];
 } options;
 
