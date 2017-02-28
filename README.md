@@ -20,7 +20,7 @@ Copyright (c) 2013 Dylan Reinhold
     SOFTWARE.
     
 dsdtune is a wrapper that will call the new dsdplus trying each of the fine tunning 
-options, -ds# -dd# -dv#.
+options, -ds# -dv#.
 
 When complete will report the options that showed the best decode.
 
