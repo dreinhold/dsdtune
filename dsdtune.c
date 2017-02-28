@@ -63,9 +63,7 @@ int main(int argc, char *argv[]) {
   extern int optind, opterr, optopt;
   int decode_str_len;
   char base_command[255];
-  dsd_params params[] = {  { "dr",  1,   5, 0, 0, 0 }, 
-                           { "dh",  1,   8, 0, 0, 0 },
-                           { "ds", 55,  75, 0, 0, 1 }, /*DSDPlus 1.074 recognizes a range of 55-75*/
+  dsd_params params[] = {  { "ds", 55,  75, 0, 0, 1 }, /*DSDPlus 1.074 recognizes a range of 55-75*/
                            { "dd",  1, 100, 0, 0, 1 },
                            { "dv",  1,  30, 0, 0, 1 },
                            { "  ",  0,   0, 0, 0, 0 } }; /* GCC warns if this is 0 */
